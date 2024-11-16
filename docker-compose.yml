@@ -1,0 +1,78 @@
+#version: "3.9"
+services:
+  postgres:
+    container_name: postgres_container
+    image: postgres:14.8-alpine3.18
+    environment:
+      POSTGRES_DB: "db"
+      POSTGRES_USER: "mmagistr"
+      POSTGRES_PASSWORD: "N3v3rTryT0HackM3"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ../2. Init Database:/docker-entrypoint-initdb.d
+      - habrdb-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mmagistr -d db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+    networks:
+      - postgres
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:7.2
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "domini@mmagistr.com"
+      PGADMIN_DEFAULT_PASSWORD: "N3v3rTryT0HackM3"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+    networks:
+      - postgres
+
+  postgres_exporter:
+    container_name: exporter_container
+    image: prometheuscommunity/postgres-exporter:v0.10.1
+    environment:
+      DATA_SOURCE_URI: "postgres:5432/habrdb?sslmode=disable"
+      DATA_SOURCE_USER: "mmagistr"
+      DATA_SOURCE_PASS: "N3v3rTryT0HackM3"
+      PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/queries.yaml"
+    volumes:
+      - ./queries.yaml:/etc/postgres_exporter/queries.yaml:ro
+    ports:
+      - "9187:9187"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 500M
+    networks:
+      - postgres
+
+volumes:
+  habrdb-data:
+  pgadmin-data:
+
+networks:
+  postgres:
+    driver: bridge
