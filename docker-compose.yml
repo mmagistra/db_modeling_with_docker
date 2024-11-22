@@ -5,7 +5,7 @@ services:
     image: postgres:14.8-alpine3.18
     environment:
       POSTGRES_DB: "db"
-      POSTGRES_USER: "mmagistr"
+      POSTGRES_USER: "domini"
       POSTGRES_PASSWORD: "N3v3rTryT0HackM3"
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
@@ -14,7 +14,7 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U mmagistr -d db"]
+      test: ["CMD-SHELL", "pg_isready -U domini -d db"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -53,7 +53,7 @@ services:
     image: prometheuscommunity/postgres-exporter:v0.10.1
     environment:
       DATA_SOURCE_URI: "postgres:5432/habrdb?sslmode=disable"
-      DATA_SOURCE_USER: "mmagistr"
+      DATA_SOURCE_USER: "domini"
       DATA_SOURCE_PASS: "N3v3rTryT0HackM3"
       PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/queries.yaml"
     volumes:
@@ -68,6 +68,17 @@ services:
           memory: 500M
     networks:
       - postgres
+
+  app:
+    build:
+      context: .
+    ports:
+      - 8000:80
+    environment:
+      DATABASE_URL: "postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@pg/${POSTGRES_DB}"
+    depends_on:
+      pg:
+        condition: service_healthy
 
 volumes:
   habrdb-data:
