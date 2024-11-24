@@ -3,7 +3,8 @@ from pysqlx_engine import PySQLXEngine
 
 
 class DatabaseHelper:
-    def __init__(self, url: str, echo: bool = False):
+    def __init__(self, url: str, echo: bool):
+        print(f'echo: {echo}')
         self.echo = echo
         self.db = PySQLXEngine(url)
 
@@ -11,6 +12,8 @@ class DatabaseHelper:
         await self.db.connect()
 
     async def execute(self, stmt):
+        if self.echo:
+            print(stmt)
         if not self.db.connected:
             await self.connect()
         await self.db.execute(sql=stmt)
@@ -20,19 +23,21 @@ class DatabaseHelper:
             print(stmt)
         if not self.db.connected:
             await self.connect()
-        await self.db.query(sql=stmt)
+        data = await self.db.query(sql=stmt)
+        return data
 
     async def query_first(self, stmt):
         if self.echo:
             print(stmt)
         if not self.db.connected:
             await self.connect()
-        await self.db.query_first(sql=stmt)
+        data = await self.db.query_first(sql=stmt)
+        return data
 
     async def commit(self):
         await self.db.commit()
 
-    async def close(self):
+    async def commit_and_close(self):
         await self.commit()
         await self.db.close()
 

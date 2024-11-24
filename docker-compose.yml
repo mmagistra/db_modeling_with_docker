@@ -30,6 +30,8 @@ services:
 
   pgadmin:
     container_name: pgadmin_container
+    attach: false
+#    attach: true
     image: dpage/pgadmin4:7.2
     environment:
       PGADMIN_DEFAULT_EMAIL: "domini@mmagistr.com"
@@ -70,15 +72,28 @@ services:
       - postgres
 
   app:
+    container_name: app_container
     build:
       context: .
     ports:
-      - 8000:80
+      - 8000:90
     environment:
-      DATABASE_URL: "postgresql+asyncpg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@pg/${POSTGRES_DB}"
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres/${POSTGRES_DB}"
+      SETTINGS: '${SETTINGS}'
     depends_on:
-      pg:
+      postgres:
         condition: service_healthy
+    networks:
+      - postgres
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./app
+          target: ./var/app
+        - action: rebuild
+          path: requirements.txt
+        - action: rebuild
+          path: Dockerfile
 
 volumes:
   habrdb-data:

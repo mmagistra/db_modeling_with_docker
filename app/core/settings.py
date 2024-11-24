@@ -6,10 +6,15 @@ BASE_DIR = Path(__file__).parent.parent
 
 DB_PATH = BASE_DIR / "db.sqlite3"
 
-DB_URL = getenv('DATABASE_URL', f"sqlite+aiosqlite:///{DB_PATH}")
-CURRENT_SETTINGS = getenv('SETTINGS', 'Settings')
+# DB_URL = getenv('DATABASE_URL', f"sqlite+aiosqlite:///{DB_PATH}")
+DB_URL = getenv('DATABASE_URL', f"postgresql://"
+                                f"{getenv('POSTGRES_USER')}:"
+                                f"{getenv('POSTGRES_PASSWORD')}@postgres_container/"
+                                f"{getenv('POSTGRES_DB')}")
+CURRENT_SETTINGS = getenv('SETTINGS', 'ProdSettings')
 
 print('OUR DB URL IS ', DB_URL)
+print('CURRENT SETTINGS IS ', CURRENT_SETTINGS)
 
 
 class Settings(BaseSettings):
