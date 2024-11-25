@@ -1,0 +1,28 @@
+<div class="container mx-5" style="width: 10%">
+    <ul class="nav nav-underline mx-auto mb-2 mb-lg-0 d-flex flex-column justify-content-around align-items-start sticky-top" style="height: 50vh; top:25%">
+        <li class="nav-item">
+            <a class="nav-link py-0 {{'active fs-5' if is_cars_active}}" aria-current="page"
+                href="{{ '../'*(level-1) if level is defined else '' }}../about">Машины</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link py-0 {{'active fs-5' if is_make_models_active}}" aria-current="page"
+                href="{{ '../'*(level-1) if level is defined else '' }}../home">Марки-модели</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link py-0 {{'active fs-5' if is_orders_active}}"
+                href="{{ '../'*(level-1) if level is defined else '' }}../profile">Заказы</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link py-0 {{'active fs-5' if is_owners_active}}" aria-current="page"
+                href="{{ '../'*(level-1) if level is defined else '' }}../about">Владельцы</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link py-0 {{'active fs-5' if is_work_types_active}}" aria-current="page"
+                href="{{ '../'*(level-1) if level is defined else '' }}../about">Типы работ</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link py-0 {{'active fs-5' if is_works_in_order_active}}" aria-current="page"
+                href="{{ '../'*(level-1) if level is defined else '' }}../about">Работы в заказе</a>
+        </li>
+    </ul>
+</div>

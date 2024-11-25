@@ -1,0 +1,44 @@
+<nav class="navbar navbar-expand-sm bg-body-tertiary sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ '../'*(level-1) if level is defined else '' }}../home">
+            <img src="/static/images/{{'light' if is_light_theme else 'dark'}}/table.png" alt="logo" width="30"
+                class="mx-2">
+            Работа с таблицами
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse me-5" id="navbarSupportedContent">
+            <ul class="nav nav-tabs mx-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link py-0 {{'active fs-5' if is_tables_active}}" aria-current="page"
+                        href="{{ '../'*(level-1) if level is defined else '' }}../about">Таблицы</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link py-0 {{'active fs-5' if is_accountings_active}}" aria-current="page"
+                        href="{{ '../'*(level-1) if level is defined else '' }}../home">Отчеты</a>
+                </li>
+            </ul>
+        </div>
+        <form action="..{{ '/..'*(level-1) if level is defined else '' }}/api/theme/change_theme" method="post"
+            id="change_theme_form">
+            <button type="submit" class="btn btn-{{ 'light' if is_light_theme else 'dark' }} mx-2">
+                <img src="..{{ '/..'*(level-1) if level is defined else '' }}/static/images/{{ 'light' if is_light_theme else 'dark' }}/theme_icon.png"
+                    alt="theme" width="30">
+            </button>
+        </form>
+    </div>
+</nav>
+<script>
+    document.getElementById('change_theme_form').onsubmit = event => {
+        event.preventDefault(); // Останавливаем стандартное поведение
+        fetch(event.target.action, {
+            method: 'POST', // Используем метод POST
+            body: new FormData() // Собираем данные формы
+        })
+            .then(response => response.json())
+            .then(data => location.reload()) // Обработка отклика
+            .catch(error => console.error('Ошибка:', error)); // Обработка потенциальных ошибок
+    };
+</script>

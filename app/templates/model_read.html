@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% if is_tables_active %}
+{% block table_body %}
+<div>Hello table</div>
+{% endblock %}
+{% else %}
+{% block accounting_body %}
+<div>Hello accounting</div>
+{% endblock %}
+{% endif %}
