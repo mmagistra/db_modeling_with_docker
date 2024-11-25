@@ -1,37 +1,34 @@
-from typing import Annotated
+from typing import Annotated, List
 
 from fastapi import Form
 
 from core.models.db_helper import DatabaseHelper
-from routers.api.make_models.schemas import MakeModelCreateForm, MakeModelUpdateForm, MakeModelDeleteForm, MakeModelReadForm
+from routers.api.make_models.schemas import MakeModelCreateForm, MakeModelUpdateForm, MakeModelDeleteForm, MakeModelReadForm, MakeModel
+
+
+TABLE_NAME = 'make_models'
+ID_FIELD_NAME = 'id_make_model'
 
 
 async def create_make_model(
         db_helper: DatabaseHelper,
         make_model: Annotated[MakeModelCreateForm, Form()]
 ):
-    stmt = f"""
-    INSERT INTO make_models (make_model)
-    VALUES ('{make_model.make_model}')
-    """
-    await db_helper.execute(stmt)
-    await db_helper.commit_and_close()
+    await db_helper.create(TABLE_NAME, make_model)
 
 
 async def read_all_make_models(
         db_helper: DatabaseHelper
-):
-    stmt = """SELECT * FROM make_models ORDER BY id_make_model"""
-    data = await db_helper.query(stmt)
+) -> List[MakeModel]:
+    data = await db_helper.read_all(TABLE_NAME, ID_FIELD_NAME, MakeModel)
     return data
 
 
 async def read_make_model(
         db_helper: DatabaseHelper,
         make_model: MakeModelReadForm
-):
-    stmt = f"""SELECT * FROM make_models WHERE id_make_model = {make_model.id_make_model} ORDER BY id_make_model"""
-    data = await db_helper.query_first(stmt)
+) -> MakeModel:
+    data = await db_helper.read(TABLE_NAME, ID_FIELD_NAME, make_model.model_dump()[ID_FIELD_NAME], MakeModel)
     return data
 
 
@@ -39,30 +36,11 @@ async def update_make_model(
         db_helper: DatabaseHelper,
         make_model: MakeModelUpdateForm,
 ):
-    stmt = f"""
-    UPDATE make_models
-    SET """
-    for key, value in make_model.model_dump().items():
-        if value is not None:
-            stmt += f"{key}='{value}', "
-
-    if stmt[-2:] == ', ':
-        stmt = stmt[:-2]
-
-    stmt += f""" 
-    WHERE id_make_model={make_model.id_make_model}
-"""
-
-    await db_helper.execute(stmt)
-    await db_helper.commit_and_close()
+    await db_helper.update(TABLE_NAME, ID_FIELD_NAME, make_model.model_dump()[ID_FIELD_NAME], make_model)
 
 
 async def delete_make_model(
         db_helper: DatabaseHelper,
         make_model: MakeModelDeleteForm
 ):
-    stmt = f"""
-    DELETE FROM make_models WHERE id_make_model={make_model.id_make_model}
-    """
-    await db_helper.execute(stmt)
-    await db_helper.commit_and_close()
+    await db_helper.delete(TABLE_NAME, ID_FIELD_NAME, make_model.model_dump()[ID_FIELD_NAME])

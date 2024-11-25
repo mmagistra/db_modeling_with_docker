@@ -1,37 +1,34 @@
-from typing import Annotated
+from typing import Annotated, List
 
 from fastapi import Form
 
 from core.models.db_helper import DatabaseHelper
-from routers.api.orders.schemas import OrderCreateForm, OrderUpdateForm, OrderDeleteForm, OrderReadForm
+from routers.api.orders.schemas import OrderCreateForm, OrderUpdateForm, OrderDeleteForm, OrderReadForm, Order
+
+
+TABLE_NAME = 'orders'
+ID_FIELD_NAME = 'id_order'
 
 
 async def create_order(
         db_helper: DatabaseHelper,
         order: Annotated[OrderCreateForm, Form()]
 ):
-    stmt = f"""
-    INSERT INTO orders (date, fk_car)
-    VALUES ('{order.date}', {order.fk_car})
-    """
-    await db_helper.execute(stmt)
-    await db_helper.commit_and_close()
+    await db_helper.create(TABLE_NAME, order)
 
 
 async def read_all_orders(
         db_helper: DatabaseHelper
-):
-    stmt = """SELECT * FROM orders ORDER BY id_order"""
-    data = await db_helper.query(stmt)
+) -> List[Order]:
+    data = await db_helper.read_all(TABLE_NAME, ID_FIELD_NAME, Order)
     return data
 
 
 async def read_order(
         db_helper: DatabaseHelper,
         order: OrderReadForm
-):
-    stmt = f"""SELECT * FROM orders WHERE id_order = {order.id_order} ORDER BY id_order"""
-    data = await db_helper.query_first(stmt)
+) -> Order:
+    data = await db_helper.read(TABLE_NAME, ID_FIELD_NAME, order.model_dump()[ID_FIELD_NAME], Order)
     return data
 
 
@@ -39,30 +36,11 @@ async def update_order(
         db_helper: DatabaseHelper,
         order: OrderUpdateForm,
 ):
-    stmt = f"""
-    UPDATE orders
-    SET """
-    for key, value in order.model_dump().items():
-        if value is not None:
-            stmt += f"{key}='{value}', "
-
-    if stmt[-2:] == ', ':
-        stmt = stmt[:-2]
-
-    stmt += f""" 
-    WHERE id_order={order.id_order}
-"""
-
-    await db_helper.execute(stmt)
-    await db_helper.commit_and_close()
+    await db_helper.update(TABLE_NAME, ID_FIELD_NAME, order.model_dump()[ID_FIELD_NAME], order)
 
 
 async def delete_order(
         db_helper: DatabaseHelper,
         order: OrderDeleteForm
 ):
-    stmt = f"""
-    DELETE FROM orders WHERE id_order={order.id_order}
-    """
-    await db_helper.execute(stmt)
-    await db_helper.commit_and_close()
+    await db_helper.delete(TABLE_NAME, ID_FIELD_NAME, order.model_dump()[ID_FIELD_NAME])

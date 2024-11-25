@@ -1,45 +1,34 @@
-from typing import Annotated
+from typing import Annotated, List
 
 from fastapi import Form
 
 from core.models.db_helper import DatabaseHelper
-from routers.api.works_in_order.schemas import WorkInOrderCreateForm, WorkInOrderUpdateForm, WorkInOrderDeleteForm, WorkInOrderReadForm
+from routers.api.works_in_order.schemas import WorkInOrderCreateForm, WorkInOrderUpdateForm, WorkInOrderDeleteForm, WorkInOrderReadForm, WorkInOrder
+
+
+TABLE_NAME = 'works_in_order'
+ID_FIELD_NAME = 'id_work_in_order'
 
 
 async def create_work_in_order(
         db_helper: DatabaseHelper,
         work_in_order: Annotated[WorkInOrderCreateForm, Form()]
 ):
-    stmt = f"""
-    INSERT INTO works_in_order (fk_order, fk_work_type, work_number, count, amount)
-    VALUES (
-        {work_in_order.fk_order}, 
-        {work_in_order.fk_work_type}, 
-        {work_in_order.work_number}, 
-        {work_in_order.count}, 
-        {work_in_order.amount}
-    )
-    """
-    await db_helper.execute(stmt)
-    await db_helper.commit_and_close()
+    await db_helper.create(TABLE_NAME, work_in_order)
 
 
 async def read_all_works_in_order(
         db_helper: DatabaseHelper
-):
-    stmt = """SELECT * FROM works_in_order ORDER BY id_work_in_order"""
-    data = await db_helper.query(stmt)
+) -> List[WorkInOrder]:
+    data = await db_helper.read_all(TABLE_NAME, ID_FIELD_NAME, WorkInOrder)
     return data
 
 
 async def read_work_in_order(
         db_helper: DatabaseHelper,
         work_in_order: WorkInOrderReadForm
-):
-    stmt = f"""SELECT * FROM works_in_order
-        WHERE id_work_in_order = {work_in_order.id_work_in_order} ORDER BY id_work_in_order
-    """
-    data = await db_helper.query_first(stmt)
+) -> WorkInOrder:
+    data = await db_helper.read(TABLE_NAME, ID_FIELD_NAME, work_in_order.model_dump()[ID_FIELD_NAME], WorkInOrder)
     return data
 
 
@@ -47,30 +36,11 @@ async def update_work_in_order(
         db_helper: DatabaseHelper,
         work_in_order: WorkInOrderUpdateForm,
 ):
-    stmt = f"""
-    UPDATE works_in_order
-    SET """
-    for key, value in work_in_order.model_dump().items():
-        if value is not None:
-            stmt += f"{key}='{value}', "
-
-    if stmt[-2:] == ', ':
-        stmt = stmt[:-2]
-
-    stmt += f""" 
-    WHERE id_work_in_order={work_in_order.id_work_in_order}
-"""
-
-    await db_helper.execute(stmt)
-    await db_helper.commit_and_close()
+    await db_helper.update(TABLE_NAME, ID_FIELD_NAME, work_in_order.model_dump()[ID_FIELD_NAME], work_in_order)
 
 
 async def delete_work_in_order(
         db_helper: DatabaseHelper,
         work_in_order: WorkInOrderDeleteForm
 ):
-    stmt = f"""
-    DELETE FROM works_in_order WHERE id_work_in_order={work_in_order.id_work_in_order}
-    """
-    await db_helper.execute(stmt)
-    await db_helper.commit_and_close()
+    await db_helper.delete(TABLE_NAME, ID_FIELD_NAME, work_in_order.model_dump()[ID_FIELD_NAME])

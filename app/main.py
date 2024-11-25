@@ -8,6 +8,8 @@ from core.models.db_helper import db_helper
 from core.models.base import get_db_migration_stmts
 from create_fastapi_app import create_app
 from routers.api.views import router as api_router
+from routers.debug.views import router as debug_router
+from routers.frontend.views import router as frontend_router
 
 
 @asynccontextmanager
@@ -25,16 +27,5 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 app.include_router(api_router)
-
-
-@app.get("/hello/", tags=['Test'])
-def hello_world():
-    return {"message": "Hello World"}
-
-
-@app.get("/test-db/", tags=['Test'])
-async def test_db():
-    data = await db_helper.query("""SELECT * FROM cars""")
-    db_helper.commit_and_close()
-    print(data)
-    return data
+app.include_router(debug_router)
+app.include_router(frontend_router)

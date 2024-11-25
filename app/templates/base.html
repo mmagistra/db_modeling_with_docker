@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>{% block title %}default title{% endblock %}</title>
+</head>
+{% if is_light_theme %}
+
+<body>
+    {% else %}
+
+    <body data-bs-theme="dark">
+        {% endif %}
+        {% if is_tables_active %}
+        {% include 'nav-top.html' %}
+        <div class="d-flex mx-2" style="min-height:100vh">
+            {% include 'nav-left-for-table-active.html'%}
+            <div class="container">
+                {% block table_body %}
+        
+                {% endblock %}
+            </div>
+        </div>
+        {% else %}
+        {% include 'nav-top.html' %}
+        <div class="d-flex mx-2" style="min-height:100vh">
+            {% include 'nav-left-for-accounting-active.html'%}
+            <div class="container">
+                {% block accounting_body %}
+        
+                {% endblock %}
+            </div>
+        </div>
+        {% endif %}
+    </body>
+    <script src="https://unpkg.com/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+        </script>
+
+</html>

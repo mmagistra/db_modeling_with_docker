@@ -6,6 +6,7 @@ from .orders.views import router as orders_router
 from .owners.views import router as owners_router
 from .work_types.views import router as work_types_router
 from .works_in_order.views import router as works_in_order_router
+from .theme.views import router as theme_router
 
 
 router = APIRouter(prefix='/api', tags=['api'])
@@ -16,3 +17,4 @@ router.include_router(orders_router)
 router.include_router(owners_router)
 router.include_router(work_types_router)
 router.include_router(works_in_order_router)
+router.include_router(theme_router)
