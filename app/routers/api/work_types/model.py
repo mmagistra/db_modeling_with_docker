@@ -8,6 +8,17 @@ from routers.api.work_types.schemas import WorkTypeCreateForm, WorkTypeUpdateFor
 
 TABLE_NAME = 'work_types'
 ID_FIELD_NAME = 'id_work_type'
+HUMAN_IDENTIFY_FIELDS = ['id_work_type', 'name']
+
+
+async def read_work_types_human_identify_fields(
+        db_helper: DatabaseHelper,
+) -> List[dict]:
+    return await db_helper.read_fields(
+        TABLE_NAME,
+        HUMAN_IDENTIFY_FIELDS,
+        ID_FIELD_NAME
+    )
 
 
 async def create_work_type(

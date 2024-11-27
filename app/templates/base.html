@@ -19,7 +19,7 @@
         {% include 'nav-top.html' %}
         <div class="d-flex mx-2" style="min-height:100vh">
             {% include 'nav-left-for-table-active.html'%}
-            <div class="container">
+            <div class="container d-flex flex-column align-items-center">
                 {% block table_body %}
         
                 {% endblock %}
@@ -40,5 +40,8 @@
     <script src="https://unpkg.com/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
         </script>
+    {% block script %}
+        
+    {% endblock %}
 
 </html>

@@ -13,11 +13,11 @@
             <ul class="nav nav-tabs mx-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link py-0 {{'active fs-5' if is_tables_active}}" aria-current="page"
-                        href="{{ '../'*(level-1) if level is defined else '' }}../about">Таблицы</a>
+                        href="{{ '../'*(level-1) if level is defined else '' }}../table/cars">Таблицы</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link py-0 {{'active fs-5' if is_accountings_active}}" aria-current="page"
-                        href="{{ '../'*(level-1) if level is defined else '' }}../home">Отчеты</a>
+                    <a class="nav-link py-0 {{'active fs-5' if is_accounting_active}}" aria-current="page"
+                        href="{{ '../'*(level-1) if level is defined else '' }}../accounting/avg_amount_for_cars/calculate">Отчеты</a>
                 </li>
             </ul>
         </div>

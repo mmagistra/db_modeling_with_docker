@@ -60,8 +60,17 @@ async def handler_update_make_model(
 
 
 @router.post('/delete')
-async def handle_delete_make_model(
+async def handle_delete_car_with_form(
         form_data: Annotated[MakeModelDeleteForm, Form()]
 ):
+    await delete_make_model(db_helper=db_helper, make_model=form_data)
+    return status.HTTP_202_ACCEPTED
+
+
+@router.post('/delete/{id_for_delete}')
+async def handle_delete_car_with_query(
+        id_for_delete: int
+):
+    form_data = MakeModelDeleteForm(id_make_model=id_for_delete)
     await delete_make_model(db_helper=db_helper, make_model=form_data)
     return status.HTTP_202_ACCEPTED

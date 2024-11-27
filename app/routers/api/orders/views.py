@@ -51,17 +51,18 @@ async def handler_create_order(
     return status.HTTP_201_CREATED
 
 
-@router.post('/update')
-async def handler_update_order(
-        form_data: Annotated[OrderUpdateForm, Form()]
+@router.post('/delete')
+async def handle_delete_car_with_form(
+        form_data: Annotated[OrderDeleteForm, Form()]
 ):
-    await update_order(db_helper=db_helper, order=form_data)
+    await delete_order(db_helper=db_helper, order=form_data)
     return status.HTTP_202_ACCEPTED
 
 
-@router.post('/delete')
-async def handle_delete_order(
-        form_data: Annotated[OrderDeleteForm, Form()]
+@router.post('/delete/{id_for_delete}')
+async def handle_delete_car_with_query(
+        id_for_delete: int
 ):
+    form_data = OrderDeleteForm(id_order=id_for_delete)
     await delete_order(db_helper=db_helper, order=form_data)
     return status.HTTP_202_ACCEPTED

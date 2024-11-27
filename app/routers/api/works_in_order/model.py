@@ -8,6 +8,25 @@ from routers.api.works_in_order.schemas import WorkInOrderCreateForm, WorkInOrde
 
 TABLE_NAME = 'works_in_order'
 ID_FIELD_NAME = 'id_work_in_order'
+HUMAN_IDENTIFY_FIELDS = ['id_order', 'date', 'car_number']
+HUMAN_IDENTIFY_ADDITIONAL_TABLES = [
+    {
+        'inner_id': 'orders.fk_car',
+        'outer_id': 'cars.id_car',
+        'table_to_join': 'cars'
+     }
+]
+
+
+async def read_works_in_order_human_identify_fields(
+        db_helper: DatabaseHelper,
+) -> List[dict]:
+    return await db_helper.read_fields(
+        TABLE_NAME,
+        HUMAN_IDENTIFY_FIELDS,
+        ID_FIELD_NAME,
+        HUMAN_IDENTIFY_ADDITIONAL_TABLES
+    )
 
 
 async def create_work_in_order(

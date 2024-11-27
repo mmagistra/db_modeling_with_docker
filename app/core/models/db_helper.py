@@ -1,4 +1,4 @@
-from typing import List, Tuple, Any
+from typing import List, Tuple, Any, Dict
 
 from pydantic import BaseModel
 
@@ -60,18 +60,40 @@ class DatabaseHelper:
         await self.execute(stmt)
         await self.commit_and_close()
 
-    async def read_all(self, table_name: str, id_field_name: str, TableClassName):
+    async def read_all(self, table_name: str, id_field_name: str, ClassForConvert):
         stmt = f"""SELECT * FROM {table_name} ORDER BY {id_field_name}"""
-        data = [TableClassName(**item.model_dump()) for item in await self.query(stmt)]
-        return data
+        data = await self.query(stmt)
+        if data is not None:
+            data = [ClassForConvert(**item.model_dump()) for item in data]
+            return data
 
-    async def read(self, table_name: str, id_field_name: str, id_value: int, TableClassName):
+    async def read(self, table_name: str, id_field_name: str, id_value: int, ClassForConvert):
         stmt = f"""SELECT * FROM {table_name}
             WHERE {id_field_name} = {id_value} ORDER BY {id_field_name}
         """
         data = await self.query_first(stmt)
         if data is not None:
-            data = TableClassName(**data.model_dump())
+            data = ClassForConvert(**data.model_dump())
+            return data
+
+    async def read_fields(
+            self,
+            table_name: str,
+            fields_for_read: List[str],
+            id_field_name: str,
+            additional_tables: None | List[Dict] = None
+    ):
+        stmt = f"""SELECT {", ".join(fields_for_read)} FROM {table_name}"""
+        if additional_tables is not None:
+            for table_to_join_data in additional_tables:
+                stmt = stmt + ' ' + f""" 
+                    INNER JOIN {table_to_join_data['table_to_join']} 
+                    ON {table_to_join_data['inner_id']}={table_to_join_data['outer_id']}
+                """.strip()
+        stmt += ' ' + f"""ORDER BY {id_field_name}"""
+        data = await self.query(stmt)
+        if data is not None:
+            data = [item.model_dump() for item in data]
             return data
 
     async def update(self, table_name: str, id_field_name: str, id_value: int, updated_data: dict | Any):
@@ -100,6 +122,12 @@ class DatabaseHelper:
         """
         await self.execute(stmt)
         await self.commit_and_close()
+
+    async def execute_and_convert_to_class(self, stmt, ClassForConvert):
+        data = await self.query(stmt)
+        if data is not None:
+            data = [ClassForConvert(**item.model_dump()) for item in data]
+            return data
 
 
 db_helper = DatabaseHelper(

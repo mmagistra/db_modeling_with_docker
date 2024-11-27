@@ -8,6 +8,13 @@ from routers.api.cars.schemas import CarCreateForm, CarUpdateForm, CarDeleteForm
 
 TABLE_NAME = 'cars'
 ID_FIELD_NAME = 'id_car'
+HUMAN_IDENTIFY_FIELDS = ['id_car', 'car_number']
+
+
+async def read_cars_human_identify_fields(
+        db_helper: DatabaseHelper,
+) -> List[dict]:
+    return await db_helper.read_fields(TABLE_NAME, HUMAN_IDENTIFY_FIELDS, ID_FIELD_NAME)
 
 
 async def create_car(

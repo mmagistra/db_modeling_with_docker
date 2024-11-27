@@ -8,6 +8,13 @@ from routers.api.make_models.schemas import MakeModelCreateForm, MakeModelUpdate
 
 TABLE_NAME = 'make_models'
 ID_FIELD_NAME = 'id_make_model'
+HUMAN_IDENTIFY_FIELDS = ['id_make_model', 'make_model']
+
+
+async def read_make_models_human_identify_fields(
+        db_helper: DatabaseHelper,
+) -> List[dict]:
+    return await db_helper.read_fields(TABLE_NAME, HUMAN_IDENTIFY_FIELDS, ID_FIELD_NAME)
 
 
 async def create_make_model(

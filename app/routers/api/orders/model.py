@@ -8,6 +8,25 @@ from routers.api.orders.schemas import OrderCreateForm, OrderUpdateForm, OrderDe
 
 TABLE_NAME = 'orders'
 ID_FIELD_NAME = 'id_order'
+HUMAN_IDENTIFY_FIELDS = ['id_order', 'date', 'car_number']
+HUMAN_IDENTIFY_ADDITIONAL_TABLES = [
+    {
+        'inner_id': 'orders.fk_car',
+        'outer_id': 'cars.id_car',
+        'table_to_join': 'cars'
+     }
+]
+
+
+async def read_orders_human_identify_fields(
+        db_helper: DatabaseHelper,
+) -> List[dict]:
+    return await db_helper.read_fields(
+        TABLE_NAME,
+        HUMAN_IDENTIFY_FIELDS,
+        ID_FIELD_NAME,
+        HUMAN_IDENTIFY_ADDITIONAL_TABLES
+    )
 
 
 async def create_order(

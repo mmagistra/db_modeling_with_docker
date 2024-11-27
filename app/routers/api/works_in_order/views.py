@@ -19,7 +19,7 @@ from routers.api.works_in_order.schemas import (
     WorkInOrderDeleteForm
 )
 
-router = APIRouter(prefix='/works_in_work_in_order', tags=['WorkInOrders'])
+router = APIRouter(prefix='/works_in_order', tags=['WorkInOrders'])
 
 
 @router.get('/read')
@@ -60,8 +60,17 @@ async def handler_update_work_in_order(
 
 
 @router.post('/delete')
-async def handle_delete_work_in_order(
+async def handle_delete_work_in_order_with_form(
         form_data: Annotated[WorkInOrderDeleteForm, Form()]
 ):
+    await delete_work_in_order(db_helper=db_helper, work_in_order=form_data)
+    return status.HTTP_202_ACCEPTED
+
+
+@router.post('/delete/{id_for_delete}')
+async def handle_delete_work_in_order_with_query(
+        id_for_delete: int
+):
+    form_data = WorkInOrderDeleteForm(id_work_in_order=id_for_delete)
     await delete_work_in_order(db_helper=db_helper, work_in_order=form_data)
     return status.HTTP_202_ACCEPTED

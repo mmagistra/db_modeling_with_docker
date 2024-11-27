@@ -38,7 +38,7 @@ async def handler_read_car_by_id(
     form_data = CarReadForm(id_car=int(id_car))
     data = await read_car(db_helper=db_helper, car=form_data)
     if data is None:
-        return data
+        return None
     response_form = Car(**data.model_dump())
     return response_form
 
@@ -60,8 +60,17 @@ async def handler_update_car(
 
 
 @router.post('/delete')
-async def handle_delete_car(
+async def handle_delete_car_with_form(
         form_data: Annotated[CarDeleteForm, Form()]
 ):
+    await delete_car(db_helper=db_helper, car=form_data)
+    return status.HTTP_202_ACCEPTED
+
+
+@router.post('/delete/{id_for_delete}')
+async def handle_delete_car_with_query(
+        id_for_delete: int
+):
+    form_data = CarDeleteForm(id_car=id_for_delete)
     await delete_car(db_helper=db_helper, car=form_data)
     return status.HTTP_202_ACCEPTED

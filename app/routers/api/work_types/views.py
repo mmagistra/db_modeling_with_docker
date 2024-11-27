@@ -60,8 +60,17 @@ async def handler_update_work_type(
 
 
 @router.post('/delete')
-async def handle_delete_work_type(
+async def handle_delete_work_type_with_form(
         form_data: Annotated[WorkTypeDeleteForm, Form()]
 ):
+    await delete_work_type(db_helper=db_helper, work_type=form_data)
+    return status.HTTP_202_ACCEPTED
+
+
+@router.post('/delete/{id_for_delete}')
+async def handle_delete_work_type_with_query(
+        id_for_delete: int
+):
+    form_data = WorkTypeDeleteForm(id_work_type=id_for_delete)
     await delete_work_type(db_helper=db_helper, work_type=form_data)
     return status.HTTP_202_ACCEPTED

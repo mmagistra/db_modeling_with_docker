@@ -8,6 +8,17 @@ from routers.api.owners.schemas import OwnerCreateForm, OwnerUpdateForm, OwnerDe
 
 TABLE_NAME = 'owners'
 ID_FIELD_NAME = 'id_owner'
+HUMAN_IDENTIFY_FIELDS = ['id_owner', 'name']
+
+
+async def read_owners_human_identify_fields(
+        db_helper: DatabaseHelper,
+) -> List[dict]:
+    return await db_helper.read_fields(
+        TABLE_NAME,
+        HUMAN_IDENTIFY_FIELDS,
+        ID_FIELD_NAME
+    )
 
 
 async def create_owner(

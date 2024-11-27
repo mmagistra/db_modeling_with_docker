@@ -1,7 +1,5 @@
-import psycopg
-import pprint
+from routers.api.cars.schemas import CarUpdateForm
+from routers.frontend.tables.schemas import Field
 
-from routers.api.make_models.schemas import MakeModel
-
-a = MakeModel().model_dump()
-print(a[:-2])
+a = Field(name='release_year', field_type='integer')
+print(a)

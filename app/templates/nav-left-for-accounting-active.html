@@ -1,17 +1,17 @@
-<div class="container mx-5" style="width: 10%">
+<div class="container mx-5 border-end border-secondary-subtle" style="width: 10%">
     <ul class="nav nav-underline mx-auto mb-2 mb-lg-0 d-flex flex-column justify-content-around align-items-start sticky-top"
-        style="height: 30vh; top:30%">
+        style="height: 50vh; top:25%">
         <li class="nav-item">
-            <a class="nav-link py-0 {{'active fs-5' if about_active}}" aria-current="page"
-                href="{{ '../'*(level-1) if level is defined else '' }}../about">Отчет 1</a>
+            <a class="nav-link py-0 {{'active fs-5' if is_average_amount_for_cars_active}}" aria-current="page"
+                href="{{ '../'*(level-3) if level is defined else '' }}../avg_amount_for_cars/calculate">Средняя стоимость заказа</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link py-0 {{'active fs-5' if home_active}} active" aria-current="page"
-                href="{{ '../'*(level-1) if level is defined else '' }}../home">Отчет 2</a>
+            <a class="nav-link py-0 {{'active fs-5' if is_all_work_types_by_car}}" aria-current="page"
+                href="{{ '../'*(level-3) if level is defined else '' }}../all_work_types_by_car/calculate">Проведенные работы для машины</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link py-0 {{'active fs-5' if profile_active}}"
-                href="{{ '../'*(level-1) if level is defined else '' }}../profile">Отчет 3</a>
+            <a class="nav-link py-0 {{'active fs-5' if is_total_price_by_work_type}}"
+                href="{{ '../'*(level-3) if level is defined else '' }}../total_price_by_work_type/calculate">Общая стоимость типа работ</a>
         </li>
     </ul>
 </div>

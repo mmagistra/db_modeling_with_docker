@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from starlette.templating import Jinja2Templates
 
 from .cars.views import router as cars_router
 from .make_models.views import router as make_models_router
@@ -11,6 +12,8 @@ from .theme.views import router as theme_router
 
 router = APIRouter(prefix='/api', tags=['api'])
 
+templates = Jinja2Templates(directory='templates')
+
 router.include_router(cars_router)
 router.include_router(make_models_router)
 router.include_router(orders_router)
@@ -18,3 +21,5 @@ router.include_router(owners_router)
 router.include_router(work_types_router)
 router.include_router(works_in_order_router)
 router.include_router(theme_router)
+
+

@@ -60,8 +60,17 @@ async def handler_update_owner(
 
 
 @router.post('/delete')
-async def handle_delete_owner(
+async def handle_delete_owner_with_form(
         form_data: Annotated[OwnerDeleteForm, Form()]
 ):
+    await delete_owner(db_helper=db_helper, owner=form_data)
+    return status.HTTP_202_ACCEPTED
+
+
+@router.post('/delete/{id_for_delete}')
+async def handle_delete_owner_with_query(
+        id_for_delete: int
+):
+    form_data = OwnerDeleteForm(id_owner=id_for_delete)
     await delete_owner(db_helper=db_helper, owner=form_data)
     return status.HTTP_202_ACCEPTED
