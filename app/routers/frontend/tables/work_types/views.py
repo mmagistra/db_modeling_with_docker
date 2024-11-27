@@ -32,7 +32,7 @@ async def create_work_type(
 ):
     is_light_theme = request.cookies.get('theme', 'dark') == 'light'
 
-    FORM_FIELDS = get_form_fields(db_helper)
+    FORM_FIELDS = await get_form_fields(db_helper)
 
     level = 4
 

@@ -8,4 +8,4 @@ RU_NAME_PLURAL = 'Средняя сумма заказа для каждой м�
 class AvgAmountForCars(BaseModel):
     id_car: int
     car_number: str
-    avg_order_amount: int
+    avg_order_amount: float | None

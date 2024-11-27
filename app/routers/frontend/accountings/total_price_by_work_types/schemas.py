@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 IS_PAGE_ACTIVE_CONDITION_NAME = 'is_total_price_by_work_type'
 NAME_PLURAL = 'Total price by work types'
-RU_NAME_PLURAL = 'Общая стоимость проведенных работ для каждого типа работ'
+RU_NAME_PLURAL = 'Общая стоимость проведенных работ по типу работы'
 
 
 class TotalPriceByWorkTypes(BaseModel):

@@ -1,10 +1,10 @@
 <nav class="navbar navbar-expand-sm bg-body-tertiary sticky-top">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{{ '../'*(level-1) if level is defined else '' }}../home">
+        <div class="navbar-brand">
             <img src="/static/images/{{'light' if is_light_theme else 'dark'}}/table.png" alt="logo" width="30"
                 class="mx-2">
             Работа с таблицами
-        </a>
+        </div>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
