@@ -84,7 +84,7 @@ def get_default_data_insert_stmts():
         """,
         """
         -- Добавление данных в таблицу make_model
-        INSERT INTO public.make_model (make_model) VALUES
+        INSERT INTO public.make_models (make_model) VALUES
         ('Toyota Camry'),
         ('Honda Accord'),
         ('Ford Focus'),
